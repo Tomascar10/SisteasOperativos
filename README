@@ -1,0 +1,36 @@
+1. Funcionamiento de las llamadas al sistema
+
+Llamada al sistema getppid()
+La llamada al sistema getppid() retorna el ID del proceso padre del proceso que la invoca. Es útil para que cualquier proceso en xv6 pueda identificar cuál es su proceso padre sin tener que acceder directamente a la estructura del proceso. En nuestro programa de prueba yosoytupadre.c, utilizamos esta llamada para imprimir el PID del proceso padre en la terminal.
+
+Llamada al sistema getancestor(int n)
+La llamada al sistema getancestor(n) retorna el ID del ancestro del proceso actual, donde el parámetro n indica cuántas generaciones hacia atrás se debe buscar. Por ejemplo:
+
+getancestor(0) retorna el PID del proceso actual.
+getancestor(1) retorna el PID del proceso padre.
+getancestor(2) retorna el PID del abuelo.
+Si no hay suficientes ancestros, la función retorna -1. En el programa de prueba, utilizamos esta llamada para mostrar el PID del proceso actual, del padre y del abuelo, o un mensaje de error si no hay tantos ancestros disponibles.
+
+2. Explicación de las modificaciones realizadas
+
+Modificación para getppid()
+Para implementar la llamada al sistema getppid(), se agregaron los siguientes cambios:
+
+En el archivo sysproc.c, se creó la función sys_getppid(), que simplemente retorna el PID del proceso padre utilizando myproc()->parent->pid.
+Se añadió la llamada al sistema en syscall.h y syscall.c, asignándole un número de syscall único.
+También se agregaron las declaraciones correspondientes en los archivos de cabecera user.h y usys.S para poder usar esta syscall desde los programas de usuario.
+Modificación para getancestor(int n)
+Para implementar la llamada al sistema getancestor(n), se realizaron los siguientes cambios:
+
+En sysproc.c, se implementó la función sys_getancestor(), que utiliza un bucle para recorrer los ancestros del proceso actual, moviéndose a través de p->parent tantas veces como indique el parámetro n.
+Similar a getppid(), se añadieron las entradas correspondientes en syscall.h, syscall.c, user.h y usys.S.
+3. Dificultades encontradas y cómo se resolvieron
+
+1. Entender la estructura del sistema de llamadas en xv6
+Al principio, fue difícil comprender cómo se estructuran las llamadas al sistema en xv6. Para resolver esto, investigamos otras llamadas sencillas, como getpid(), que nos ayudaron a entender la estructura y la forma en que las funciones del kernel interactúan con el sistema.
+
+2. Recorrer ancestros en getancestor()
+Uno de los retos fue implementar la función getancestor() de manera que recorriera correctamente los procesos padres. Inicialmente, se pensó en una implementación más compleja, pero luego se simplificó utilizando un bucle que recorre los ancestros mediante p->parent. Esto permitió resolver el problema de manera eficiente.
+
+3. Pruebas del programa
+Durante las pruebas con yosoytupadre.c, tuvimos que modificar el Makefile para asegurarnos de que el nuevo programa de prueba se compilara y ejecutara correctamente. Después de agregar el programa al Makefile, las pruebas funcionaron sin problemas.
