@@ -127,8 +127,8 @@ static int (*syscalls[])(void) = {
 [SYS_link]    sys_link,
 [SYS_mkdir]   sys_mkdir,
 [SYS_close]   sys_close,
-[SYS_getppid]   sys_getppid,
 [SYS_dup]     sys_dup,
+[SYS_getppid]   sys_getppid,
 [SYS_getancestor] sys_getancestor,
 };
 

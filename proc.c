@@ -532,21 +532,3 @@ procdump(void)
     cprintf("\n");
   }
 }
-
-int getprocs() {
-
-  struct proc *p;
-
-  acquire(&ptable.lock);
-
-  int cont = 0;
-
-  for(p = ptable.proc; p < &ptable.proc[NPROC]; p++)
-    if(p->state != RUNNING)
-      cont++;
-
-  release(&ptable.lock);
-
-  return cont;
-
-}
