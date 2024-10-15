@@ -89,6 +89,10 @@ found:
   p->state = EMBRYO;
   p->pid = nextpid++;
 
+  // Inicializar prioridad y boost
+  p->priority = 0;  // Prioridad inicial en 0
+  p->boost = 1;     // Boost inicial en 1
+
   release(&ptable.lock);
 
   // Allocate kernel stack.
@@ -114,6 +118,7 @@ found:
 
   return p;
 }
+
 
 //PAGEBREAK: 32
 // Set up first user process.
